@@ -2,27 +2,34 @@ use <hull.scad>;
 
 $fn = 120;
 
-// Outer Diameter - Upper Ring
+// Outer Diameter - Upper Ring (mm)
 outer_diamerter_upper = 80; // [::non-negative integer]
 
-// Outer Diameter - Lower Ring
+// Outer Diameter - Lower Ringv
 outer_diamerter_lower = 140; // [::non-negative integer]
 
-// Shade Wall Thickness
-shade_wall_thickness = 1; // [::float]
+// Shade Wall Height (mm)
+shade_wall_height = 100; // [::non-negative integer]
+
+// Shade Wall Thickness (mm)
+shade_wall_thickness = 1; // [::non-negative float]
 
 // Light Ring Type Closed
 light_ring_is_closed = false; // [::boolean]
 
-// Light Ring Height
+// Light Ring Height (mm)
 light_ring_height = 50; // [::non-negative integer]
 
-// Height (mm)
-shade_wall_height = 100; // [::non-negative integer]
+// Separarion between upper links and wall (mm)
+link_ring_radial_separation_upper = 0.5; // [::float]
 
+// Calculated measures.
 inner_diameter_lower = outer_diamerter_lower - (2 * shade_wall_thickness);
 inner_diameter_upper = outer_diamerter_upper - (2 * shade_wall_thickness);
-
+link_ring_diameter_upper = (inner_diameter_upper - link_ring_radial_separation_upper);
+link_ring_diameter_lower = (45.57 - 2); // Standard Socket Adapter for E27 lamp
+link_ring_z_upper = 5;
+link_ring_z_lower = 51;
 
 module bottom_ring(d, h) {
     cylinder(d=d, h=h);
@@ -106,13 +113,6 @@ module puntos_soporte(d, sectors=3, z=0, id=0) {
         }
     }
 }
-
-braces_separation = 0.5; // [::float]
-
-link_ring_diameter_upper = (inner_diameter_upper - braces_separation);
-link_ring_diameter_lower = (45.57 - 2); // Standard Socket Adapter for E27 lamp
-link_ring_z_upper = 5;
-link_ring_z_lower = 51;
 
 // Shade Wall
 shade_wall(d1=outer_diamerter_upper, d2=outer_diamerter_lower, h=shade_wall_height);
