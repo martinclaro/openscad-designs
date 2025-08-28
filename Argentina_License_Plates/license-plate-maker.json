@@ -1,0 +1,45 @@
+{
+    "fileFormatVersion": "1",
+    "parameterSets": {
+        "Amateur Radio Callsign": {
+            "add_holes": "true",
+            "add_keychain": "false",
+            "header": "REPÚBLICA ARGENTINA",
+            "header_font_face": "Ubuntu",
+            "header_font_size": "12",
+            "header_font_style": "Bold",
+            "header_h": "35",
+            "layer_0": "2",
+            "layer_1": "3",
+            "layer_2": "4",
+            "license": "LU1AAA",
+            "license_font_face": "FE\\-Font",
+            "license_font_size": "50",
+            "license_font_style": "Normal",
+            "license_spacing": "1.2",
+            "plate_contour_w": "6",
+            "plate_h": "130",
+            "plate_w": "400"
+        },
+        "Car Plate": {
+            "add_holes": "true",
+            "add_keychain": "false",
+            "header": "REPÚBLICA ARGENTINA",
+            "header_font_face": "Ubuntu",
+            "header_font_size": "12",
+            "header_font_style": "Bold",
+            "header_h": "35",
+            "layer_0": "2",
+            "layer_1": "3",
+            "layer_2": "4",
+            "license": "AA 000 AA",
+            "license_font_face": "FE\\-Font",
+            "license_font_size": "50",
+            "license_font_style": "Normal",
+            "license_spacing": "0.95",
+            "plate_contour_w": "6",
+            "plate_h": "130",
+            "plate_w": "400"
+        }
+    }
+}
