@@ -9,9 +9,10 @@ chip_height = 50;
 chip_depth = 3;
 
 module rounded_rect(l, w, h, r, center = false) {
-  linear_extrude(height=h)
-    offset(r=r, $fn=60)
-      square([l - (2 * r), w - (2 * r)], center=center);
+  color("silver")
+    linear_extrude(height=h)
+      offset(r=r, $fn=60)
+        square([l - (2 * r), w - (2 * r)], center=center);
 }
 ;
 
@@ -23,24 +24,29 @@ module make_text(t, b, c) {
   d = chip_depth;
   z = chip_depth / 2;
 
-  translate(v=[0, separation * 2, z])
-    linear_extrude(height=d)
-      text(t, size=font_size, font=font, halign="left", valign="baseline", spacing=font_spacing);
+  color("black") {
+    translate(v=[0, separation * 2, z])
+      linear_extrude(height=d)
+        text(t, size=font_size, font=font, halign="left", valign="baseline", spacing=font_spacing);
 
-  translate(v=[0, separation, z])
-    linear_extrude(height=d)
-      text(b, size=font_size, font=font, halign="left", valign="baseline", spacing=font_spacing);
+    translate(v=[0, separation, z])
+      linear_extrude(height=d)
+        text(b, size=font_size, font=font, halign="left", valign="baseline", spacing=font_spacing);
 
-  translate(v=[0, 0, z])
-    linear_extrude(height=d)
-      text(c, size=font_size, font=font, halign="left", valign="baseline", spacing=font_spacing);
+    translate(v=[0, 0, z])
+      linear_extrude(height=d)
+        text(c, size=font_size, font=font, halign="left", valign="baseline", spacing=font_spacing);
+  }
+  ;
 }
 ;
 
 module hole() {
   hole_radius = 5;
-  translate(v=[chip_width - 3 * hole_radius, chip_height - 3 * hole_radius, -chip_depth / 2])
-    cylinder(h=chip_depth * 2, r=hole_radius, center=false);
+
+  color("black")
+    translate(v=[chip_width - 3 * hole_radius, chip_height - 3 * hole_radius, -chip_depth / 2])
+      cylinder(h=chip_depth * 2, r=hole_radius, center=false);
 }
 ;
 
