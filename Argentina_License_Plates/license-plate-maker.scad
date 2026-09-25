@@ -4,16 +4,22 @@
  */
 $fn = $preview ? 32 : 100;
 
-use <fonts/Ubuntu-B.ttf>;
-use <fonts/FE.TTF>;
+use <fonts/FE.TTF>
+use <fonts/Ubuntu-B.ttf>
 
 /* [Text] */
 
 // License Text
-license = "AA 000 AA";
+license_line1 = "AA 000 AA";
+license_line2 = "";
 
 // Header
 header = "REPÚBLICA ARGENTINA";
+
+/* [Text settings] */
+
+// Text Padding
+text_line_padding = 72; // [::non-negative integer]
 
 /* [Plate dimensions] */
 
@@ -70,111 +76,154 @@ add_keychain = false; // [true, false]
 // Add bolt holes
 add_holes = true; // [true, false]
 
-
-module rounded_rect(l, w, r, center = false) {
-  offset(r=r, $fn=60)
-    square([l - (2 * r), w - (2 * r)], center=center);
+module
+rounded_rect(l, w, r, center = false)
+{
+    offset(r = r, $fn = 60)
+        square([ l - (2 * r), w - (2 * r) ], center = center);
 }
 
-module plate() {
-  color("white")
-    linear_extrude(layer_0)
-      rounded_rect(l=plate_w, w=plate_h, r=5, center=true);
-}
-;
+module
+plate()
+{
+    color("white") linear_extrude(layer_0)
+        rounded_rect(l = plate_w, w = plate_h, r = 5, center = true);
+};
 
-module draw_plate_contour() {
-  color("black")
-    linear_extrude(layer_2)
-      difference() {
-        rounded_rect(l=plate_w, w=plate_h, r=5, center=true);
-        rounded_rect(l=plate_w - (2 * plate_contour_w), w=plate_h - (2 * plate_contour_w), r=4, center=true);
-      }
-  ;
-}
-;
+module
+draw_plate_contour()
+{
+    color("black") linear_extrude(layer_2) difference()
+    {
+        rounded_rect(l = plate_w, w = plate_h, r = 5, center = true);
+        rounded_rect(l = plate_w - (2 * plate_contour_w),
+                     w = plate_h - (2 * plate_contour_w),
+                     r = 4,
+                     center = true);
+    };
+};
 
-module header() {
-  color("blue")
-    translate(v=[0, (plate_h / 2) - (header_h / 2), 0])
-      linear_extrude(layer_1)
-        rounded_rect(l=plate_w, w=header_h, r=5, center=true);
-}
-;
+module
+header()
+{
+    color("blue") translate(v = [ 0, (plate_h / 2) - (header_h / 2), 0 ])
+        linear_extrude(layer_1)
+            rounded_rect(l = plate_w, w = header_h, r = 5, center = true);
+};
 
-module draw_header_text() {
-  color("white")
-    translate(v=[0, (plate_h / 2) - (header_h / 2) - (plate_contour_w), 0])
-      linear_extrude(layer_2)
-        text(header, size=header_font_size, font=header_font_name, halign="center", valign="center", spacing=header_spacing);
-}
-;
+module
+draw_header_text()
+{
+    color("white") translate(
+        v = [ 0, (plate_h / 2) - (header_h / 2) - (plate_contour_w), 0 ])
+        linear_extrude(layer_2) text(header,
+                                     size = header_font_size,
+                                     font = header_font_name,
+                                     halign = "center",
+                                     valign = "center",
+                                     spacing = header_spacing);
+};
 
-module draw_license_text() {
-  color("black")
-    translate(v=[0, -(header_h / 2) + (plate_contour_w / 2), 0])
-      linear_extrude(layer_2)
-        text(license, size=license_font_size, font=license_font_name, halign="center", valign="center", spacing=license_spacing);
-}
-;
+module
+draw_text(t)
+{
+    color("black") linear_extrude(layer_2) text(t,
+                                                size = license_font_size,
+                                                font = license_font_name,
+                                                halign = "center",
+                                                valign = "center",
+                                                spacing = license_spacing);
+};
 
-module draw_holes() {
-  displacement_w = plate_w * 0.5 / 2;
-  y = (plate_h / 2) - (header_h / 2) + (plate_contour_w);
+module
+draw_license_text1()
+{
+    padding = license_line2 ? text_line_padding / 2 : 0;
+    color("black") translate(
+        v = [ 0, -(header_h / 2) + (plate_contour_w / 2) + padding, 0 ])
+        draw_text(t = license_line1);
+};
 
-  translate(v=[displacement_w, y, -layer_2 / 2])
-    linear_extrude(layer_2 * 2)
-      rounded_rect(l=22, w=6, r=2, center=true);
+module
+draw_license_text2()
+{
+    padding = license_line2 ? text_line_padding / 2 : 0;
+    color("black") translate(
+        v = [ 0, -(header_h / 2) + (plate_contour_w / 2) - padding, 0 ])
+        draw_text(t = license_line2);
+};
 
-  translate(v=[-displacement_w, y, -layer_2 / 2])
-    linear_extrude(layer_2 * 2)
-      rounded_rect(l=22, w=6, r=2, center=true);
-}
-;
+module
+draw_holes()
+{
+    displacement_w = plate_w * 0.5 / 2;
+    y = (plate_h / 2) - (header_h / 2) + (plate_contour_w);
 
-module draw_chain_link() {
-  bore_size = plate_h/2;
-  chain_link_length = bore_size * 2;
+    translate(v = [ displacement_w, y, -layer_2 / 2 ])
+        linear_extrude(layer_2 * 2)
+            rounded_rect(l = 22, w = 6, r = 2, center = true);
 
-  color("black")
-    translate([(2 * bore_size - chain_link_length) - plate_w / 2, 0, 0]) difference() {
-        hull() {
-          translate([-bore_size, 0, 0])
-            cylinder(h=layer_2, r=bore_size, center=false);
+    translate(v = [ -displacement_w, y, -layer_2 / 2 ])
+        linear_extrude(layer_2 * 2)
+            rounded_rect(l = 22, w = 6, r = 2, center = true);
+};
 
-          translate([-bore_size, -bore_size, 0])
-            cube([chain_link_length-bore_size+plate_contour_w, bore_size * 2, layer_2], false);
+module
+draw_chain_link()
+{
+    bore_size = plate_h / 2;
+    chain_link_length = bore_size * 2;
+
+    color("black")
+        translate([ (2 * bore_size - chain_link_length) - plate_w / 2, 0, 0 ])
+            difference()
+    {
+        hull()
+        {
+            translate([ -bore_size, 0, 0 ])
+                cylinder(h = layer_2, r = bore_size, center = false);
+
+            translate([ -bore_size, -bore_size, 0 ])
+                cube(size =
+                         [
+                             chain_link_length - bore_size + plate_contour_w,
+                             bore_size * 2,
+                             layer_2
+                         ],
+                     center = false);
         }
-        translate([-bore_size, 0, 0])
-          cylinder(h=layer_2 * 2, r=bore_size / 2, center=true);
-      }
-}
-
-module license_plate() {
-  plate();
-  header();
-  draw_header_text();
-  draw_license_text();
-  draw_plate_contour();
-}
-;
-
-module main() {
-  if (add_holes) {
-    difference() {
-      license_plate();
-      draw_holes();
+        translate([ -bore_size, 0, 0 ])
+            cylinder(h = layer_2 * 2, r = bore_size / 2, center = true);
     }
-    ;
-  } else {
-    if (add_keychain) {
-      draw_chain_link();
-    }
-
-    license_plate();
-  }
-  ;
 }
-;
+
+module
+license_plate()
+{
+    plate();
+    header();
+    draw_header_text();
+    draw_license_text1();
+    draw_license_text2();
+    draw_plate_contour();
+};
+
+module
+main()
+{
+    if (add_holes) {
+        difference()
+        {
+            license_plate();
+            draw_holes();
+        };
+    } else {
+        if (add_keychain) {
+            draw_chain_link();
+        }
+
+        license_plate();
+    };
+};
 
 main();

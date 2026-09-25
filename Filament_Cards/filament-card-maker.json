@@ -1,0 +1,21 @@
+{
+    "fileFormatVersion"
+      : "1"
+      , "parameterSets":
+    {
+        "New set 1":
+        {
+            "chip_depth"
+              : "3"
+              , "chip_height"
+              : "50"
+              , "chip_width"
+              : "100"
+              , "filament_brand"
+              : "Prusa"
+              , "filament_color"
+              : "Acqua"
+              , "filament_type" : "PLA ART"
+        }
+    }
+}

@@ -1,2 +1,3 @@
-# openscad-designs
+# openscad - designs
+
 Yet another OpenScad designs repository
