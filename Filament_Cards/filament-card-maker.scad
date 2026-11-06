@@ -1,10 +1,8 @@
 $fn = $preview ? 32 : 100;
 
-filament_type = "PLA"; // [PLA, PLA+, PLA ART, PLA ART DUE, PLA GLOW, PLA MATTE,
-                       // PLA MAX, HYPER PLA, ABS, ASA, PA11, PETG]
+filament_type = "PLA"; // [PLA, PLA+, PLA ART, PLA ART DUE, PLA Glitter, PLA GLOW, PLA MATTE, PLA MAX, HYPER PLA, ABS, ASA, PA11, PETG]
 
-filament_brand =
-    "Prusa"; // [CHE3D, Creality, GST3D, Elegoo, Plast.ar, Print-a-Lot, Prusa]
+filament_brand = "Prusa"; // [CHE3D, Creality, GST3D, Elegoo, Plast.ar, Print-a-Lot, Prusa]
 
 filament_color = "Acqua";
 
