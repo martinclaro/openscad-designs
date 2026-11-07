@@ -16,6 +16,13 @@
 
    Bottom cooling vents: set bottom_vent_sides to front/rear/both/none;
    tune count, pitch, length, width, x, edge_offset and corner_r.
+
+   Base feet: feet_enabled toggles four integral underside supports.
+   feet_height sets floor clearance (underside extends into negative Z).
+   feet_x_offset and feet_y_offset set each foot centre inward from
+   the respective outer X and Y edges; feet_d controls footprint.
+   feet_x_shift / feet_y_shift move the entire four-foot pattern.
+   Keep feet clear of vent cutouts and PSU through-screw holes.
 */
 $fn = $preview ? 48 : 300;
 
@@ -103,14 +110,27 @@ bottom_vent_length = 6;     // slot dimension along X (mm)
 bottom_vent_width = 20;     // slot dimension along Y (mm)
 bottom_vent_pitch = 10;     // slot centre spacing along X (mm)
 bottom_vent_x = 0;          // row centre offset along X (mm)
-bottom_vent_edge_offset =
-    15;                   // slot centre distance inward from outer +/-Y edge
+bottom_vent_edge_offset = 15; // slot centre distance inward from outer +/-Y edge
 bottom_vent_corner_r = 3; // rounded slot corners (mm); 0 = square
 
 // Ensure slot ends remain inside the floor and clear the PSU mounting bosses.
 // For each side, adjust edge_offset to move its row toward/away from the wall.
 // Front slots may be under the connector panel; check internal wiring
 // clearance.
+
+/* [Base Feet - Bottom Vent Clearance] */
+// Four integral circular feet, one near each corner of the base.
+// Their bottoms are at Z=-feet_height; enclosure floor starts at Z=0.
+// Set feet_height to the desired free airflow gap beneath the vents.
+feet_enabled = true;
+feet_height = 6;        // mm of clearance under enclosure
+feet_d = 16;            // foot diameter (mm)
+feet_db = 19;           // foot diameter at base (mm)
+feet_x_offset = 15;     // foot centre inward from each short end (+/-X)
+feet_y_offset = 15;     // foot centre inward from each long side (+/-Y)
+feet_x_shift = 0;       // move entire four-foot pattern along X
+feet_y_shift = 0;       // move entire four-foot pattern along Y
+// Adjust offsets to avoid floor vents and mounting screw holes.
 
 /* [DIN Rail] */
 
@@ -141,7 +161,7 @@ rail_mount_d = 3.3;
 rail_mount_spacing = 50;
 
 // rail_support_drop changes distance below the lid.
-rail_support_drop = 10;
+rail_support_drop = 4;
 
 /* [Screws positions] */
 outer_l = psu_length + 2 * clearance_x + 2 * wall;
@@ -283,6 +303,24 @@ bottom_cooling_vents()
                         center = true);
 }
 
+// Shared XY positions for the four underside feet.
+module
+feet_positions()
+{
+    for (x = [-outer_l/2 + feet_x_offset, outer_l/2 - feet_x_offset],
+         y = [-outer_w/2 + feet_y_offset, outer_w/2 - feet_y_offset])
+        translate([x + feet_x_shift, y + feet_y_shift, 0]) children();
+}
+
+module
+base_feet()
+{
+    if (feet_enabled && feet_height > 0 && feet_d > 0 && feet_db > 0)
+        feet_positions()
+            translate([0, 0, -feet_height])
+                cylinder(r1 = feet_d/2, r2 = feet_db/2, h = feet_height + 0.5);
+}
+
 module
 base()
 {
@@ -290,6 +328,8 @@ base()
     {
         union()
         {
+            // Integrated feet below the base, leaving floor vents open.
+            base_feet();
             difference()
             {
                 rounded_prism(
